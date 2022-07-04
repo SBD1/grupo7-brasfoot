@@ -1,0 +1,17 @@
+site_name: Brasfoot
+site_description: Repositório do Projeto de Sistemas de Bancos de Dados
+repo_url: https://github.com/danieloda/grupo7-brasfoot
+dev_addr: '127.0.0.1:8000'
+edit_uri: ""
+
+theme:
+    name: material
+    logo: images/logo.png
+    favicon: images/logo.png
+    language: pt
+    palette:
+        primary: green
+    features:
+        - navigation.tabs
+plugins:
+    - search
