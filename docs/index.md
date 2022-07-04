@@ -21,7 +21,7 @@ ser jogadas de forma rápida e divertida!
 * Pode também ser chamada para uma seleção, e jogar a Copa do Mundo, Eurocopa ou Copa América.
 * O jogo tem um ranking de técnicos e de clubes, nele os melhores técnicos irão competir para ver quem leva o seu time ao topo.
 
-# Integrantes
+## Integrantes
 Abaixo segue tabela com os integrantes do projeto e as suas reespectivas informações:
 
 |        | <img src="images/paulo.jpeg" alt="drawing" style="border-radius: 50%" width="200"/> | <img src="images/daniel.jpg" alt="drawing" style="border-radius: 50%" width="200"/> | <img src="images/matheus.jpeg" alt="drawing" style="border-radius: 50%" width="200"/> |
@@ -29,7 +29,7 @@ Abaixo segue tabela com os integrantes do projeto e as suas reespectivas informa
 | Nome   |                                    Paulo Gontijo                                    |                                     Daniel Oda                                      |                                   Matheus Clementes                                   |
 | Github |                 [paulohgontijoo](https://github.com/paulohgontijoo)                 |                      [danieloda](https://github.com/danieloda)                      |                 [matheusclemente](https://github.com/matheusclemente)                 |
 
-# Referências Bibliográficas
+## Referências Bibliográficas
 > [Brasfoot](http://www.brasfoot.com/), acessado em 3 de Julho de 2022.
 
 > [Mkdocs Material](https://squidfunk.github.io/mkdocs-material/), acessado em 3 de Julho de 2022.
