@@ -14,4 +14,4 @@ O DER (Diagrama Entidade-Relacionamento) é utilizado para representar em forma 
 
 ## Diagrama Entidade-Relacionamento
 
-![](DER.png)
+![](images/DER.png)
