@@ -1,8 +1,9 @@
 ﻿# Modelo Relacional
 
-|    Data    | Versão | Descrição | Autor |
-| :---: | :----: | :---: | :---: |
-| 03/07/2022 | 0.1 | Início do Documento | [Daniel Oda](https://github.com/danieloda) |
+|    Data    | Versão |      Descrição       |      Autor       |
+|:----------:|:------:|:--------------------:|:----------------:|
+| 03/07/2022 |  0.1   | Início do Documento  |    Daniel Oda    |
+| 04/07/2022 |  0.1   | Revisão do Documente | Matheus Clemente |
 
 
 
@@ -32,3 +33,5 @@ O MREL (Modelo Relacional) é utilizado para apoiar a implementação das aplica
 - **national_match** { <ins>id_match</ins>,  id_round, id_national_team1, id_national_team_2 }
 - **national_played_match** {  <ins>id_match, id_team, id_coach, id_player</ins>, cards, wrong_passes, assistences, disarms, time_with_ball, goals }
 
+## Referências Bibliográficas
+> [Oracle](https://www.oracle.com/br/database/what-is-a-relational-database/), acessado em 3 de Julho de 2022.
