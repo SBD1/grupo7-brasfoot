@@ -4,7 +4,7 @@ matéria Sistema de Bancos de Dados 1, Universidade de Brasília, Faculdade
 do Gama, semestre letivo 2022.1.
 
 ### Link da Wiki
-[Wiki Brasfoot SBD 2022.1]()
+[Wiki Brasfoot SBD 2022.1](https://paulohgontijoo.github.io/grupo7-brasfoot/)
 
 ## Brasfoot
 No Brasfoot você comanda um time de futebol, compra e vende jogadores,
