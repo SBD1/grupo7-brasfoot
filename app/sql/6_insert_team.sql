@@ -1,3 +1,5 @@
+BEGIN TRANSACTION;
+
 INSERT INTO team (
 	name,
 	state_br,
@@ -15,7 +17,9 @@ VALUES (
 	'Brazil'
 ),
 (
-	'Bahia',
-	'BA',
+	'Flamengo',
+	'RJ',
 	'Brazil'
-)
+);
+
+COMMIT TRANSACTION;

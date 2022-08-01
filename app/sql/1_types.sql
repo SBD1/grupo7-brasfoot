@@ -24,4 +24,8 @@ CREATE TYPE match_event_type as ENUM (
     'y_card', 'r_card', 'goal', 'shot', 'shot_on_goal', 'disarm', 'wrong_pass'
 );
 
+CREATE TYPE transaction_type as ENUM (
+  'buy', 'sell', 'borrow', 'rent'
+);
+
 COMMIT TRANSACTION;
