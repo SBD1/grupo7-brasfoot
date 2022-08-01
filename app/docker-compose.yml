@@ -23,6 +23,10 @@ services:
           - ./sql/7_insert_player.sql:/docker-entrypoint-initdb.d/7_insert_player.sql
           - ./sql/8_insert_stadium.sql:/docker-entrypoint-initdb.d/8_insert_stadium.sql
           - ./sql/9_insert_trains.sql:/docker-entrypoint-initdb.d/9_insert_trains.sql
-          - ./sql/10_insert_championship.sql:/docker-entrypoint-initdb.d/10_insert_championship.sql
-          - ./sql/11_insert_match.sql:/docker-entrypoint-initdb.d/11_insert_match.sql
-          - ./sql/12_insert_played_match.sql:/docker-entrypoint-initdb.d/12_insert_played_match.sql
+          - ./sql/a_10_insert_championship.sql:/docker-entrypoint-initdb.d/a_10_insert_championship.sql
+          - ./sql/a_11_insert_match.sql:/docker-entrypoint-initdb.d/a_11_insert_match.sql
+          - ./sql/a_12_insert_played_match.sql:/docker-entrypoint-initdb.d/a_12_insert_played_match.sql
+          - ./sql/a_13_insert_lineup_match.sql:/docker-entrypoint-initdb.d/a_13_insert_lineup_match.sql
+          - ./sql/a_14_insert_event.sql:/docker-entrypoint-initdb.d/a_14_insert_event.sql
+          - ./sql/a_15_insert_finance.sql:/docker-entrypoint-initdb.d/a_15_insert_finance.sql
+          - ./sql/a_16_insert_transaction.sql:/docker-entrypoint-initdb.d/a_16_insert_transaction.sql
