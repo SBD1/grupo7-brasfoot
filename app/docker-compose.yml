@@ -6,7 +6,7 @@ services:
         environment:
           - POSTGRES_USER=postgres
           - POSTGRES_PASSWORD=postgres
-          - POSTGRES_DB=postgres
+          - POSTGRES_DB=brasfoot
         logging:
           options:
             max-size: 10m
@@ -14,5 +14,15 @@ services:
         ports:
           - '5432:5432'
         volumes:
-          # copy the sql script to create tables
-          - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+          - ./sql/1_types.sql:/docker-entrypoint-initdb.d/1_types.sql
+          - ./sql/2_triggers.sql:/docker-entrypoint-initdb.d/2_triggers.sql
+          - ./sql/3_extensions.sql:/docker-entrypoint-initdb.d/3_extensions.sql
+          - ./sql/4_create_tables.sql:/docker-entrypoint-initdb.d/4_create_tables.sql
+          - ./sql/5_insert_coach.sql:/docker-entrypoint-initdb.d/5_insert_coach.sql
+          - ./sql/6_insert_team.sql:/docker-entrypoint-initdb.d/6_insert_team.sql
+          - ./sql/7_insert_player.sql:/docker-entrypoint-initdb.d/7_insert_player.sql
+          - ./sql/8_insert_stadium.sql:/docker-entrypoint-initdb.d/8_insert_stadium.sql
+          - ./sql/9_insert_trains.sql:/docker-entrypoint-initdb.d/9_insert_trains.sql
+          - ./sql/10_insert_championship.sql:/docker-entrypoint-initdb.d/10_insert_championship.sql
+          - ./sql/11_insert_match.sql:/docker-entrypoint-initdb.d/11_insert_match.sql
+          - ./sql/12_insert_played_match.sql:/docker-entrypoint-initdb.d/12_insert_played_match.sql
