@@ -193,7 +193,9 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 -- Criação tabela e trigger TRANSACTION
 CREATE TABLE transaction (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    id_finance uuid NOT NULL, CONSTRAINT id_finance_fk FOREIGN KEY (id_finance) REFERENCES finance(id) ON DELETE CASCADE,
+    id_team_a uuid NOT NULL, CONSTRAINT id_team_a_fk FOREIGN KEY (id_team_a) REFERENCES team(id) ON DELETE CASCADE,
+    id_team_b uuid NOT NULL, CONSTRAINT id_team_b_fk FOREIGN KEY (id_team_b) REFERENCES team(id) ON DELETE CASCADE,
+    id_player uuid NOT NULL, CONSTRAINT player_fk FOREIGN KEY (id_player) REFERENCES player(id) ON DELETE CASCADE,
     date DATE NOT NULL,
     type transaction_type NOT NULL,
     value NUMERIC NOT NULL

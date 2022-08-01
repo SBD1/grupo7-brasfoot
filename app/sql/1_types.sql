@@ -25,7 +25,7 @@ CREATE TYPE match_event_type as ENUM (
 );
 
 CREATE TYPE transaction_type as ENUM (
-  'buy', 'sell', 'borrow', 'rent'
+  'buy', 'sell', 'borrow'
 );
 
 COMMIT TRANSACTION;
