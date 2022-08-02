@@ -1,5 +1,5 @@
 # Sobre
-Este documento tem a inteção de servir como Wiki do projeto Brasfoot, na
+Este documento tem a intenção de servir como Wiki do projeto Brasfoot, na
 matéria Sistema de Bancos de Dados 1, Universidade de Brasília, Faculdade
 do Gama, semestre letivo 2022.1.
 
@@ -17,7 +17,7 @@ Abaixo segue tabela com os integrantes do projeto e as suas reespectivas informa
 
 |        | <img src="docs/images/paulo.jpeg" alt="drawing" style="border-radius: 50%" width="200"/> | <img src="docs/images/daniel.jpg" alt="drawing" style="border-radius: 50%" width="200"/> | <img src="docs/images/matheus.jpeg" alt="drawing" style="border-radius: 50%" width="200"/> |
 |--------|:----------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------:|
-| Nome   |                                      Paulo Gontijo                                       |                                        Daniel Oda                                        |                                     Matheus Clementes                                      |
+| Nome   |                                      Paulo Gontijo                                       |                                        Daniel Oda                                        |                                      Matheus Clemente                                      |
 | Github |                   [paulohgontijoo](https://github.com/paulohgontijoo)                    |                        [danieloda](https://github.com/danieloda)                         |                   [matheusclemente](https://github.com/matheusclemente)                    |
 
 # Instruções para executar o Brasfoot
