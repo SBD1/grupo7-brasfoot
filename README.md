@@ -38,8 +38,8 @@ e fácil. Vá ao diretório **grupo7-brasfoot/app/** e execute o comando a segui
 docker compose up
 ```
 
-Caso encontre algum problema para inicializar o container da aplicação, execute os comandos com a adição de alguns parâmetros,
-conforme mostra os blocos de código abaixo:
+Para inicializar o aplicativo do ponto partida **default**, deve-se verificar a existência de containers associados e,
+executar uma limpeza nos volumes dos mesmos. Para tal, execute o comando:
 
 ```shell
 docker compose down --volumes
