@@ -64,6 +64,6 @@ Os parâmetros de conexão com o banco são mostrados a seguir:
 * **Método de autenticação:** Usuário e senha
 * **Usuário:** postgres
 * **Senha:** postgres
-* **Database:** postgres
+* **Database:** brasfoot
 
 ![img_1.png](docs/images/postgres-connection.png)
