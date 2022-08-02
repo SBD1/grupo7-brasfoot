@@ -9,25 +9,25 @@ INSERT INTO match (
 )
 
 VALUES (
-    (SELECT id FROM public.championship WHERE championship.is_cup = FALSE),
+    (SELECT id FROM public.championship WHERE championship.is_cup = FALSE LIMIT 1),
     '01/01/2023',
-    (SELECT id FROM team WHERE team.name = 'Cruzeiro'),
-    (SELECT id FROM team WHERE team.name = 'Corinthians'),
-    (SELECT stadium.id FROM stadium,team WHERE stadium.team = team.id AND team.name = 'Cruzeiro')
+    (SELECT id FROM team WHERE team.name = 'Cruzeiro' LIMIT 1),
+    (SELECT id FROM team WHERE team.name = 'Corinthians' LIMIT 1),
+    (SELECT stadium.id FROM stadium,team WHERE stadium.team = team.id AND team.name = 'Cruzeiro' LIMIT 1)
 ),
 (
-    (SELECT id FROM public.championship WHERE championship.is_cup = FALSE),
+    (SELECT id FROM public.championship WHERE championship.is_cup = FALSE LIMIT 1),
     '02/02/2024',
-    (SELECT id FROM public.team WHERE team.name = 'Flamengo'),
-    (SELECT id FROM public.team WHERE team.name = 'Corinthians'),
-    (SELECT stadium.id FROM stadium,team WHERE stadium.team = team.id AND team.name = 'Flamengo')
+    (SELECT id FROM public.team WHERE team.name = 'Flamengo' LIMIT 1),
+    (SELECT id FROM public.team WHERE team.name = 'Corinthians' LIMIT 1),
+    (SELECT stadium.id FROM stadium,team WHERE stadium.team = team.id AND team.name = 'Flamengo' LIMIT 1)
 ),
 (
-    (SELECT id FROM public.championship WHERE championship.is_cup = FALSE),
+    (SELECT id FROM public.championship WHERE championship.is_cup = FALSE LIMIT 1),
     '03/03/2024',
-    (SELECT id FROM public.team WHERE team.name = 'Corinthians'),
-    (SELECT id FROM public.team WHERE team.name = 'Flamengo'),
-    (SELECT stadium.id FROM stadium,team WHERE stadium.team = team.id AND team.name = 'Corinthians')
+    (SELECT id FROM public.team WHERE team.name = 'Corinthians' LIMIT 1),
+    (SELECT id FROM public.team WHERE team.name = 'Flamengo' LIMIT 1),
+    (SELECT stadium.id FROM stadium,team WHERE stadium.team = team.id AND team.name = 'Corinthians' LIMIT 1)
 );
 
 COMMIT TRANSACTION;

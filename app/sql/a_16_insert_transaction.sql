@@ -20,7 +20,7 @@ VALUES (
 (
     (SELECT team.id FROM team WHERE (team.name = 'Flamengo')),
     (SELECT team.id FROM team WHERE (team.name = 'Corinthians')),
-    (SELECT player.id FROM player,team WHERE (player.team = team.id AND team.name = 'Corinthians' AND player.name = 'Cássio')),
+    (SELECT player.id FROM player,team WHERE (player.team = team.id AND team.name = 'Corinthians' AND player.name = 'Cassio')),
     '01/01/2022',
     'buy',
     26500000.00

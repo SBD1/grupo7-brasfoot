@@ -80,7 +80,7 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 -- Criação tabela e trigger PLAYER
 CREATE TABLE player (
   id uuid DEFAULT gen_random_uuid () PRIMARY KEY,
-  name VARCHAR (100) UNIQUE NOT NULL,
+  name VARCHAR (100) NOT NULL,
   team uuid NOT NULL, CONSTRAINT team_fk FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE,
   age INTEGER NOT NULL, CHECK (age BETWEEN 16 AND 48),
   position player_position_type NOT NULL,

@@ -50,6 +50,11 @@ VALUES (
 	'SaoPaulo',
 	'SP',
 	'Brazil'
+),
+(
+	'Cruzeiro',
+	'MG',
+	'Brazil'
 );
 
 COMMIT TRANSACTION;

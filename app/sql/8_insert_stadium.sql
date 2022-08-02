@@ -50,6 +50,11 @@ VALUES (
     (SELECT id FROM public.team WHERE team.name = 'SaoPaulo'),
 	45000,
 	5.00
+),
+(
+    (SELECT id FROM public.team WHERE team.name = 'Cruzeiro'),
+	70000,
+	45.00
 );
 
 COMMIT TRANSACTION;
