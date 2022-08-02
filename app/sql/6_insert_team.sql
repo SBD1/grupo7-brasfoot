@@ -12,13 +12,43 @@ VALUES (
 	'Brazil'
 ),
 (
-    'Cruzeiro',
-    'MG',
+    'Palmeiras',
+    'SP',
 	'Brazil'
 ),
 (
 	'Flamengo',
 	'RJ',
+	'Brazil'
+),
+(
+	'Fluminense',
+	'RJ',
+	'Brazil'
+),
+(
+	'AthleticoPR',
+	'PR',
+	'Brazil'
+),
+(
+	'Internacional',
+	'RS',
+	'Brazil'
+),
+(
+	'AtleticoMG',
+	'MG',
+	'Brazil'
+),
+(
+	'Bragantino',
+	'SP',
+	'Brazil'
+),
+(
+	'SaoPaulo',
+	'SP',
 	'Brazil'
 );
 
