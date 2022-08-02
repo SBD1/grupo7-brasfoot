@@ -91,7 +91,9 @@ CREATE TABLE player (
   contract_due_date DATE NOT NULL,
   market_value NUMERIC NOT NULL, CHECK (market_value > 0),
   feature1 player_feature_type NOT NULL,
-  feature2 player_feature_type NOT NULL
+  feature2 player_feature_type NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TRIGGER set_timestamp
@@ -181,7 +183,9 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 CREATE TABLE finance (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     id_team uuid NOT NULL, CONSTRAINT team_fk FOREIGN KEY (id_team) REFERENCES team(id) ON DELETE CASCADE,
-    patrimony NUMERIC
+    patrimony NUMERIC,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TRIGGER set_timestamp
