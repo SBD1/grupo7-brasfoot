@@ -25,6 +25,11 @@ VALUES ('Cassio', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 
 ('Yuri Alberto', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 21, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Adson', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 21, 'M', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Willian', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 33, 'M', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+--- Reservas
+('Matheus Donelli', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 20, 'G', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Raul Gustavo', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 23, 'Z', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Ramiro', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 29, 'M', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Mateus Vital', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 24, 'A', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 
 -- Flamengo
 ('Santos', (SELECT id FROM public.team WHERE team.name = 'Flamengo'), 32, 'G', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
