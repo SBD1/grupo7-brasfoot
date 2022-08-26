@@ -43,6 +43,11 @@ VALUES ('Cassio', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 
 ('Vitinho', (SELECT id FROM public.team WHERE team.name = 'Flamengo'), 28, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Gabriel', (SELECT id FROM public.team WHERE team.name = 'Flamengo'), 25, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Everton', (SELECT id FROM public.team WHERE team.name = 'Flamengo'), 26, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+--- Reservas
+('Diego Alves', (SELECT id FROM public.team WHERE team.name = 'Flamengo'), 37, 'G', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('David Luiz', (SELECT id FROM public.team WHERE team.name = 'Flamengo'), 35, 'Z', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Joao Gomes', (SELECT id FROM public.team WHERE team.name = 'Flamengo'), 21, 'M', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Victor Hugo', (SELECT id FROM public.team WHERE team.name = 'Flamengo'), 18, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 
 -- Palmeiras
 ('Weverton', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 34, 'G', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
@@ -56,6 +61,11 @@ VALUES ('Cassio', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 
 ('Gabriel Menino', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 21, 'M', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Breno Lopes', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 26, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Rafael Navarro', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 22, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+--- Reservas
+('Marcelo Lomba', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 35, 'G', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Luan', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 29, 'Z', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Jailson', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 26, 'M', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Raphael Veiga', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 27, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 
 -- Fluminense
 ('Fabio', (SELECT id FROM public.team WHERE team.name = 'Fluminense'), 41, 'G', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
@@ -69,6 +79,11 @@ VALUES ('Cassio', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 
 ('Felipe Melo', (SELECT id FROM public.team WHERE team.name = 'Fluminense'), 39, 'M', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Marrony', (SELECT id FROM public.team WHERE team.name = 'Fluminense'), 23, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Cano', (SELECT id FROM public.team WHERE team.name = 'Fluminense'), 34, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+--- Reservas
+('Marcos Felipe', (SELECT id FROM public.team WHERE team.name = 'Fluminense'), 26, 'G', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('David Braz', (SELECT id FROM public.team WHERE team.name = 'Fluminense'), 35, 'Z', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Wellington', (SELECT id FROM public.team WHERE team.name = 'Fluminense'), 31, 'M', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Ganso', (SELECT id FROM public.team WHERE team.name = 'Fluminense'), 32, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 
 -- Athlético-PR
 ('Bento', (SELECT id FROM public.team WHERE team.name = 'AthleticoPR'), 23, 'G', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
@@ -82,6 +97,11 @@ VALUES ('Cassio', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 
 ('Marcelo Cirino', (SELECT id FROM public.team WHERE team.name = 'AthleticoPR'), 30, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Vitinho', (SELECT id FROM public.team WHERE team.name = 'AthleticoPR'), 23, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Romulo', (SELECT id FROM public.team WHERE team.name = 'AthleticoPR'), 20, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+--- Reservas
+('Anderson Paixao', (SELECT id FROM public.team WHERE team.name = 'AthleticoPR'), 24, 'G', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Pedro Henrique', (SELECT id FROM public.team WHERE team.name = 'AthleticoPR'), 26, 'Z', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('Christian', (SELECT id FROM public.team WHERE team.name = 'AthleticoPR'), 21, 'M', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+('David Terans', (SELECT id FROM public.team WHERE team.name = 'AthleticoPR'), 28, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 
 -- Internacional
 ('Daniel', (SELECT id FROM public.team WHERE team.name = 'Internacional'), 28, 'G', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
