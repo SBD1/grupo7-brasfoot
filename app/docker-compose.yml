@@ -31,3 +31,4 @@ services:
           - ./sql/a_15_insert_finance.sql:/docker-entrypoint-initdb.d/a_15_insert_finance.sql
           - ./sql/a_16_insert_transaction.sql:/docker-entrypoint-initdb.d/a_16_insert_transaction.sql
           - ./sql/a_17_procedures.sql:/docker-entrypoint-initdb.d/a_17_procedures.sql
+          - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
