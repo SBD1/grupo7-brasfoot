@@ -54,7 +54,7 @@ docker compose up --remove-orphans --build --always-recreate-deps
 ## Conectar ao Banco de Dados
 Ao executar o comando *docker compose up*, a aplicação ficará disponível na porta 5432 do seu computador, ou seja, no *localhost*.
 Com isso, é possível se conectar com o banco de dados através de um sistema gerenciador de bancos de dados (SGBD) de sua preferência.
-No nosso exemplo foi usado uma *feature* do PyCharm, mas existem diversos outros. O SGBD oficial do **Postgres** é o
+No nosso exemplo foi usado uma *feature* do PyCharm, mas existem diversos outros. A interafce de SGBD oficial do **Postgres** é o
 **pgAdmin 4**, você pode instalá-lo facilmente por este [link aqui](https://www.pgadmin.org/download/).
 
 Os parâmetros de conexão com o banco são mostrados a seguir:
@@ -62,8 +62,8 @@ Os parâmetros de conexão com o banco são mostrados a seguir:
 * **Host:** localhost (0.0.0.0)
 * **Porta:** 5432
 * **Método de autenticação:** Usuário e senha
-* **Usuário:** postgres
-* **Senha:** postgres
+* **Usuário:** brasfoot
+* **Senha:** brasfoot
 * **Database:** brasfoot
 
-![img_1.png](docs/images/postgres-connection.png)
+![img_1.png](docs/images/postgres-connection-parameters.png)

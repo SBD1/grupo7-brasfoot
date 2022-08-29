@@ -25,6 +25,7 @@ VALUES ('Cassio', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 
 ('Yuri Alberto', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 21, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Adson', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 21, 'M', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Willian', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 33, 'M', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+
 --- Reservas
 ('Matheus Donelli', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 20, 'G', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Raul Gustavo', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 23, 'Z', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
@@ -61,6 +62,7 @@ VALUES ('Cassio', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 
 ('Gabriel Menino', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 21, 'M', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Breno Lopes', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 26, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Rafael Navarro', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 22, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
+
 --- Reservas
 ('Marcelo Lomba', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 35, 'G', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Luan', (SELECT id FROM public.team WHERE team.name = 'Palmeiras'), 29, 'Z', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
@@ -187,6 +189,7 @@ VALUES ('Cassio', (SELECT id FROM public.team WHERE team.name = 'Corinthians'), 
 ('Waguininho', (SELECT id FROM public.team WHERE team.name = 'Cruzeiro'), 18, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Vitor Leque', (SELECT id FROM public.team WHERE team.name = 'Cruzeiro'), 26, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Edu', (SELECT id FROM public.team WHERE team.name = 'Cruzeiro'), 30, 'A', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao');
+
 --- Reservas
 ('Gabriel Mesquita', (SELECT id FROM public.team WHERE team.name = 'Cruzeiro'), 23, 'G', 'D', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
 ('Wagner Leonardo', (SELECT id FROM public.team WHERE team.name = 'Cruzeiro'), 23, 'Z', 'E', 50, 100, 15000.00, '01/01/2023', 2.00, 'penalty', 'colocacao'),
