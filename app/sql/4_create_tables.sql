@@ -51,8 +51,8 @@ CREATE TABLE trains (
   name_team VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team) REFERENCES team(name) ON DELETE CASCADE,
   initial_date DATE NOT NULL DEFAULT NOW(),
   final_date DATE,
-  public_trust INTEGER NOT NULL, CHECK (public_trust BETWEEN 0 AND 100),
-  board_trust INTEGER NOT NULL, CHECK (board_trust BETWEEN 0 AND 100),
+  public_trust INTEGER NOT NULL DEFAULT 100, CHECK (public_trust BETWEEN 0 AND 100),
+  board_trust INTEGER NOT NULL DEFAULT 100, CHECK (board_trust BETWEEN 0 AND 100),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
