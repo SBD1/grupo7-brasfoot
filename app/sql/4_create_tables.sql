@@ -82,7 +82,7 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 -- Criação tabela e trigger PLAYER
 CREATE TABLE player (
   id uuid DEFAULT gen_random_uuid () PRIMARY KEY,
-  name VARCHAR (100) NOT NULL,
+  name VARCHAR (100) UNIQUE NOT NULL,
   team uuid NOT NULL, CONSTRAINT team_fk FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE,
   name_team VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team) REFERENCES team(name) ON DELETE CASCADE,
   age INTEGER NOT NULL, CHECK (age BETWEEN 16 AND 48),
@@ -208,9 +208,9 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 CREATE TABLE transaction (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     id_team_a uuid NOT NULL, CONSTRAINT id_team_a_fk FOREIGN KEY (id_team_a) REFERENCES team(id) ON DELETE CASCADE,
-    name_team_a VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team_a) REFERENCES team(name) ON DELETE CASCADE,
+    name_team_a VARCHAR (100) NOT NULL, CONSTRAINT name_team_a_fk FOREIGN KEY (name_team_a) REFERENCES team(name) ON DELETE CASCADE,
     id_team_b uuid NOT NULL, CONSTRAINT id_team_b_fk FOREIGN KEY (id_team_b) REFERENCES team(id) ON DELETE CASCADE,
-    name_team_b VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team_b) REFERENCES team(name) ON DELETE CASCADE,
+    name_team_b VARCHAR (100) NOT NULL, CONSTRAINT name_team_b_fk FOREIGN KEY (name_team_b) REFERENCES team(name) ON DELETE CASCADE,
     id_player uuid NOT NULL, CONSTRAINT player_fk FOREIGN KEY (id_player) REFERENCES player(id) ON DELETE CASCADE,
     name_player VARCHAR (100) NOT NULL, CONSTRAINT name_player_fk FOREIGN KEY (name_player) REFERENCES player(name) ON DELETE CASCADE,
     date DATE NOT NULL,

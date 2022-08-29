@@ -2,6 +2,7 @@ BEGIN TRANSACTION;
 
 INSERT INTO stadium (
 	team,
+    name_team,
 	capacity,
 	ticket_price
 )

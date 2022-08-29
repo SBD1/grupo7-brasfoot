@@ -3,6 +3,7 @@ BEGIN TRANSACTION;
 INSERT INTO trains (
 	coach,
 	team,
+    name_team,
 	public_trust,
 	board_trust
 )
