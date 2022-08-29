@@ -213,7 +213,7 @@ CREATE TABLE transaction (
     name_team_b VARCHAR (100) NOT NULL, CONSTRAINT name_team_b_fk FOREIGN KEY (name_team_b) REFERENCES team(name) ON DELETE CASCADE,
     id_player uuid NOT NULL, CONSTRAINT player_fk FOREIGN KEY (id_player) REFERENCES player(id) ON DELETE CASCADE,
     name_player VARCHAR (100) NOT NULL, CONSTRAINT name_player_fk FOREIGN KEY (name_player) REFERENCES player(name) ON DELETE CASCADE,
-    date DATE NOT NULL,
+    date DATE NOT NULL DEFAULT now(),
     type transaction_type NOT NULL,
     value NUMERIC NOT NULL
 );
