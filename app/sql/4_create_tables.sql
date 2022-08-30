@@ -48,10 +48,11 @@ CREATE TABLE trains (
   id uuid DEFAULT gen_random_uuid () PRIMARY KEY,
   coach uuid NOT NULL, CONSTRAINT coach_fk FOREIGN KEY (coach) REFERENCES coach(id) ON DELETE CASCADE,
   team uuid NOT NULL, CONSTRAINT team_fk FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE,
+  name_team VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team) REFERENCES team(name) ON DELETE CASCADE,
   initial_date DATE NOT NULL DEFAULT NOW(),
   final_date DATE,
-  public_trust INTEGER NOT NULL, CHECK (public_trust BETWEEN 0 AND 100),
-  board_trust INTEGER NOT NULL, CHECK (board_trust BETWEEN 0 AND 100),
+  public_trust INTEGER NOT NULL DEFAULT 100, CHECK (public_trust BETWEEN 0 AND 100),
+  board_trust INTEGER NOT NULL DEFAULT 100, CHECK (board_trust BETWEEN 0 AND 100),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -66,6 +67,7 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 CREATE TABLE stadium (
   id uuid DEFAULT gen_random_uuid () PRIMARY KEY,
   team uuid NOT NULL, CONSTRAINT team_fk FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE,
+  name_team VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team) REFERENCES team(name) ON DELETE CASCADE,
   capacity INTEGER NOT NULL, CHECK (capacity BETWEEN 0 AND 100000),
   ticket_price NUMERIC,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -80,8 +82,9 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 -- Criação tabela e trigger PLAYER
 CREATE TABLE player (
   id uuid DEFAULT gen_random_uuid () PRIMARY KEY,
-  name VARCHAR (100) NOT NULL,
+  name VARCHAR (100) UNIQUE NOT NULL,
   team uuid NOT NULL, CONSTRAINT team_fk FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE,
+  name_team VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team) REFERENCES team(name) ON DELETE CASCADE,
   age INTEGER NOT NULL, CHECK (age BETWEEN 16 AND 48),
   position player_position_type NOT NULL,
   side player_side_type NOT NULL,
@@ -124,7 +127,9 @@ CREATE TABLE match (
     id_championship uuid NOT NULL, CONSTRAINT championship_fk FOREIGN KEY (id_championship) REFERENCES championship(id) ON DELETE CASCADE,
     date DATE NOT NULL,
     id_team_host uuid NOT NULL, CONSTRAINT id_team_host_fk FOREIGN KEY (id_team_host) REFERENCES team(id) ON DELETE CASCADE,
+    name_team_host VARCHAR (100) NOT NULL, CONSTRAINT name_team_host_fk FOREIGN KEY (name_team_host) REFERENCES team(name) ON DELETE CASCADE,
     id_team_visitor uuid NOT NULL, CONSTRAINT id_team_visitor_fk FOREIGN KEY (id_team_visitor) REFERENCES team(id) ON DELETE CASCADE,
+    name_team_visitor VARCHAR (100) NOT NULL, CONSTRAINT name_team_visitor_fk FOREIGN KEY (name_team_visitor) REFERENCES team(name) ON DELETE CASCADE,
     id_stadium uuid NOT NULL, CONSTRAINT id_stadium_fk FOREIGN KEY (id_stadium) REFERENCES stadium(id) ON DELETE CASCADE
 );
 
@@ -153,7 +158,9 @@ CREATE TABLE lineup_match (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     id_match uuid NOT NULL, CONSTRAINT id_match_fk FOREIGN KEY (id_match) REFERENCES match(id) ON DELETE CASCADE,
     id_team uuid NOT NULL, CONSTRAINT team_fk FOREIGN KEY (id_team) REFERENCES team(id) ON DELETE CASCADE,
+    name_team VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team) REFERENCES team(name) ON DELETE CASCADE,
     id_player uuid NOT NULL, CONSTRAINT player_fk FOREIGN KEY (id_player) REFERENCES player(id) ON DELETE CASCADE,
+    name_player VARCHAR (100) NOT NULL, CONSTRAINT name_player_fk FOREIGN KEY (name_player) REFERENCES player(name) ON DELETE CASCADE,
     is_starter BOOLEAN NOT NULL,
     is_modified BOOLEAN NOT NULL
 );
@@ -169,7 +176,9 @@ CREATE TABLE event (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     id_match uuid NOT NULL, CONSTRAINT id_match_fk FOREIGN KEY (id_match) REFERENCES match(id) ON DELETE CASCADE,
     id_team uuid NOT NULL, CONSTRAINT team_fk FOREIGN KEY (id_team) REFERENCES team(id) ON DELETE CASCADE,
+    name_team VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team) REFERENCES team(name) ON DELETE CASCADE,
     id_player uuid NOT NULL, CONSTRAINT player_fk FOREIGN KEY (id_player) REFERENCES player(id) ON DELETE CASCADE,
+    name_player VARCHAR (100) NOT NULL, CONSTRAINT name_player_fk FOREIGN KEY (name_player) REFERENCES player(name) ON DELETE CASCADE,
     event_type match_event_type NOT NULL
 );
 
@@ -183,6 +192,7 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 CREATE TABLE finance (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     id_team uuid NOT NULL, CONSTRAINT team_fk FOREIGN KEY (id_team) REFERENCES team(id) ON DELETE CASCADE,
+    name_team VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team) REFERENCES team(name) ON DELETE CASCADE,
     patrimony NUMERIC,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -198,9 +208,12 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 CREATE TABLE transaction (
     id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     id_team_a uuid NOT NULL, CONSTRAINT id_team_a_fk FOREIGN KEY (id_team_a) REFERENCES team(id) ON DELETE CASCADE,
+    name_team_a VARCHAR (100) NOT NULL, CONSTRAINT name_team_a_fk FOREIGN KEY (name_team_a) REFERENCES team(name) ON DELETE CASCADE,
     id_team_b uuid NOT NULL, CONSTRAINT id_team_b_fk FOREIGN KEY (id_team_b) REFERENCES team(id) ON DELETE CASCADE,
+    name_team_b VARCHAR (100) NOT NULL, CONSTRAINT name_team_b_fk FOREIGN KEY (name_team_b) REFERENCES team(name) ON DELETE CASCADE,
     id_player uuid NOT NULL, CONSTRAINT player_fk FOREIGN KEY (id_player) REFERENCES player(id) ON DELETE CASCADE,
-    date DATE NOT NULL,
+    name_player VARCHAR (100) NOT NULL, CONSTRAINT name_player_fk FOREIGN KEY (name_player) REFERENCES player(name) ON DELETE CASCADE,
+    date DATE NOT NULL DEFAULT now(),
     type transaction_type NOT NULL,
     value NUMERIC NOT NULL
 );
