@@ -253,6 +253,117 @@ def create_lineups(choosen_team, team_id, date, i):
                                 x
                             ), con=engine)
     
+    mean_team = pd.read_sql_query(
+        """
+            SELECT 
+                position, 
+                name, 
+                age, 
+                side, 
+                strength, 
+                energy, 
+                salary, 
+                market_value, 
+                feature1, 
+                feature2, 
+                contract_due_date 
+            FROM 
+                player 
+            WHERE 
+                team = '{}'""".format(team_id), con=engine).sort_values(by="position")["strength"].mean()
+
+    mean_visitor = pd.read_sql_query(
+        """
+            SELECT 
+                position, 
+                name, 
+                age, 
+                side, 
+                strength, 
+                energy, 
+                salary, 
+                market_value, 
+                feature1, 
+                feature2, 
+                contract_due_date 
+            FROM 
+                player 
+            WHERE 
+                team = '{}'""".format(visitor_id), con=engine).sort_values(by="position")["strength"].mean()
+
+    if mean_team > mean_visitor:
+
+        championship = str(pd.read_sql_query("""SELECT * FROM match WHERE (match.date = '{}') AND (match.id_team_host = '{}'  OR match.id_team_visitor = '{}')""".format(date.strftime("%m/%d/%Y"), team_id,team_id), con=engine)["id_championship"].values[0])
+
+        engine.execute("""INSERT INTO played_match (
+                                                    id_match,
+                                                    id_championship,
+                                                    public,
+                                                    income
+                                                )
+
+                                                VALUES (
+                                                    (SELECT match.id FROM match WHERE (match.date = '{}') AND (match.id_team_host = '{}'  OR match.id_team_visitor = '{}') LIMIT 1),
+                                                    '{}',
+                                                    50000,
+                                                    1000000
+                                                );""".format(date.strftime("%m/%d/%Y"), team_id, team_id, championship))
+
+        engine.execute("""INSERT INTO event (
+                                            id_match,
+                                            id_team,
+                                            name_team,
+                                            id_player,
+                                            name_player,
+                                            event_type
+                                        )
+
+                                        VALUES (
+                                            (SELECT match.id FROM match WHERE (match.date = '{}') AND (match.id_team_host = '{}' OR match.id_team_visitor = '{}') LIMIT 1),
+                                            '{}'
+                                            'Corinthians',
+                                            (SELECT player.id FROM player,team WHERE (player.team = team.id AND team.name = 'Corinthians' AND player.name = 'Yuri Alberto') LIMIT 1),
+                                            'Yuri Alberto',
+                                            'goal');""".format(date.strftime("%m/%d/%Y"), team_id, team_id, team_id))
+
+        
+    else:
+        championship = str(pd.read_sql_query("""SELECT * FROM match WHERE (match.date = '{}') AND (match.id_team_host = '{}'  OR match.id_team_visitor = '{}')""".format(date.strftime("%m/%d/%Y"), team_id,team_id), con=engine)["id_championship"].values[0])
+        
+        engine.execute("""INSERT INTO played_match (
+                                            id_match,
+                                            id_championship,
+                                            public,
+                                            income
+                                        )
+
+                                        VALUES (
+                                            (SELECT match.id FROM match WHERE (match.date = '{}') AND (match.id_team_host = '{}' OR match.id_team_visitor = '{}') LIMIT 1),
+                                            '{}',
+                                            50000,
+                                            1000000
+                                        );""".format(date.strftime("%m/%d/%Y"), visitor_id, visitor_id, championship))
+
+        engine.execute("""INSERT INTO event (
+                                            id_match,
+                                            id_team,
+                                            name_team,
+                                            id_player,
+                                            name_player,
+                                            event_type
+                                        )
+
+                                        VALUES (
+                                            (SELECT match.id FROM match WHERE (match.date = '{}') AND (match.id_team_host = '{}' OR match.id_team_visitor = '{}') LIMIT 1),
+                                            '{}',
+                                            'Palmeiras',
+                                            (SELECT player.id FROM player,team WHERE (player.team = team.id AND team.name = 'Palmeiras' AND player.name = 'Rafael Navarro') LIMIT 1),
+                                            'Rafael Navarro',
+                                            'goal');""".format(date.strftime("%m/%d/%Y"), visitor_id, visitor_id, visitor_id))
+
+
+
+
     i += 7
     menu = ConsoleMenu(exit_option_text=False)
     function_item = FunctionItem("Voltar", main_menu, [choosen_team, i])
