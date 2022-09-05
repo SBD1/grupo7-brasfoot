@@ -30,7 +30,7 @@ dos mesmos:
 - [Docker](https://docs.docker.com/desktop/)
 - [Docker-compose](https://docs.docker.com/compose/install/compose-desktop/)
 
-## Executar o APP
+## Executar a infraestrutura de ambiente
 Uma vez finalizada as devidas intalações mencionadas acima, estamos prontos para executar o app Brasfoot, de forma simples 
 e fácil. Vá ao diretório **grupo7-brasfoot/app/** e execute o comando a seguir:
 
@@ -67,3 +67,39 @@ Os parâmetros de conexão com o banco são mostrados a seguir:
 * **Database:** brasfoot
 
 ![img_1.png](docs/images/postgres-connection-parameters.png)
+
+## Executar o APP
+A partir deste ponto, já é possível executar a CLI (*command line interface*) da aplicação. Para tal, você deve ter a
+linguagem **Python (versão 3.8+)** instalada em sua máquina. Uma vez validado esse pré-requisito, navegue até a pasta raiz
+do projeto para criar um ambiente virutal. O seguinte comando ilustra o processo:
+
+```python
+python3 -m venv venv
+```
+
+A figura a seguir exemplifica o resultado esperado da estrutura de pastas
+
+<center>
+
+![img.png](docs/images/pastas.png)
+
+</center>
+
+
+Após isso, devemos ativar o ambiente virtual, para que todas as instalações sejam feitas sem interferir no sistema globa 
+de sua máquina. Para tal, siga o comando a seguir:
+
+```shell
+source venv/bin/activate
+```
+
+
+
+Navegue até o diretório
+**grupo7-brasfoot/app/backend** e execute o seguinte comando:
+
+```python
+python3 main.py
+```
+
+Pronto, siga as instruções contidas na CLI e aproveite o jogo!
