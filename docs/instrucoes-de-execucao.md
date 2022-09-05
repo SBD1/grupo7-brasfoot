@@ -1,26 +1,8 @@
-# Sobre
-Este documento tem a intenção de servir como Wiki do projeto Brasfoot, na
-matéria Sistema de Bancos de Dados 1, Universidade de Brasília, Faculdade
-do Gama, semestre letivo 2022.1.
-
-### Link da Wiki
-[Wiki Brasfoot SBD 2022.1](https://sbd1.github.io/grupo7-brasfoot/)
-
-## Brasfoot
-No Brasfoot você comanda um time de futebol, compra e vende jogadores,
-define o preço dos ingressos, escolhe as táticas e participa dos campeonatos
-que simulam a realidade. O jogo é super leve, e várias temporadas podem
-ser jogadas de forma rápida e divertida!
-
-# Integrantes
-Abaixo segue tabela com os integrantes do projeto e as suas reespectivas informações:
-
-|        | <img src="docs/images/paulo.jpeg" alt="drawing" style="border-radius: 50%" width="200"/> | <img src="docs/images/daniel.jpg" alt="drawing" style="border-radius: 50%" width="200"/> | <img src="docs/images/matheus.jpeg" alt="drawing" style="border-radius: 50%" width="200"/> |
-|--------|:----------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------:|
-| Nome   |                                      Paulo Gontijo                                       |                                        Daniel Oda                                        |                                      Matheus Clemente                                      |
-| Github |                   [paulohgontijoo](https://github.com/paulohgontijoo)                    |                        [danieloda](https://github.com/danieloda)                         |                   [matheusclemente](https://github.com/matheusclemente)                    |
-
 # Instruções para executar o Brasfoot
+|    Data    | Versão |      Descrição       |     Autor     |
+|:----------:|:------:|:--------------------:|:-------------:|
+| 05/09/2022 |  0.1   | Criação do documento | Paulo Gontijo |
+
 ## Pré-requisitos
 O nosso app, Brasfoot, foi criado usando Docker, ou seja, de forma conteinerizada. Dessa forma, garante-se
 que, uma vez que o Docker e Docker-compose for instalado corretamente em qualquer máquina, a aplicação também funcionará.
@@ -66,7 +48,9 @@ Os parâmetros de conexão com o banco são mostrados a seguir:
 * **Senha:** brasfoot
 * **Database:** brasfoot
 
-![img_1.png](docs/images/postgres-connection-parameters.png)
+![img_1.png](images/postgres-connection-parameters.png)
+<h6 align='center'>Figura 1: Exemplo conexão com Postgres</h6>
+
 
 ## Executar o APP
 A partir deste ponto, já é possível executar a CLI (*command line interface*) da aplicação. Para tal, você deve ter a
@@ -81,9 +65,12 @@ A figura a seguir exemplifica o resultado esperado da estrutura de pastas
 
 <center>
 
-![img.png](docs/images/pastas.png)
+![img.png](images/pastas.png)
 
 </center>
+
+<h6 align='center'>Figura 2: Exemplo estrutura de pastas</h6>
+
 
 
 Após isso, devemos ativar o ambiente virtual, para que todas as instalações sejam feitas sem interferir no sistema globa 
