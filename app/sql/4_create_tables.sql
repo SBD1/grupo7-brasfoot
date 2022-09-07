@@ -85,6 +85,7 @@ CREATE TABLE player (
   name VARCHAR (100) UNIQUE NOT NULL,
   team uuid NOT NULL, CONSTRAINT team_fk FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE,
   name_team VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team) REFERENCES team(name) ON DELETE CASCADE,
+  is_starter BOOLEAN NOT NULL DEFAULT FALSE,
   age INTEGER NOT NULL, CHECK (age BETWEEN 16 AND 48),
   position player_position_type NOT NULL,
   side player_side_type NOT NULL,

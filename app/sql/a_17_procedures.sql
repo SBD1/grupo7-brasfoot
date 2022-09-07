@@ -101,5 +101,26 @@ AS $$
     )
 $$;
 
+-- Update player's energy after a played match
+CREATE OR REPLACE PROCEDURE update_players_energy_after_match()
+LANGUAGE SQL
+AS $$
+    -- Discount player's energy
+    UPDATE player
+    SET energy = (player.energy - player.age)
+    RETURNING *;
+$$;
+
+-- Update player's energy before a match
+CREATE OR REPLACE PROCEDURE update_players_energy_before_match()
+LANGUAGE SQL
+AS $$
+    -- Increase player's energy before a match
+    UPDATE player
+    SET energy = (energy + (select avg(age) from player))
+    RETURNING *;
+$$;
+
+
 
 COMMIT TRANSACTION;
