@@ -9,24 +9,10 @@ from tabulate import tabulate
 
 engine = create_engine("postgresql://brasfoot:brasfoot@localhost:5432/brasfoot")
 
-def insert_coach(coach_name):
-    sql = f"""
-    BEGIN TRANSACTION;
-    INSERT INTO coach (name, country)
-    VALUES ('{coach_name}', 'Brazil');
-    COMMIT TRANSACTION;
-    """
-    engine.execute(sql)
 
-
-def trains(coach_name, choosen_team):
+def create_coach(coach_name,choosen_team):
     sql = f"""BEGIN TRANSACTION;
-    INSERT INTO trains(coach, team, name_team)
-    VALUES(
-    (SELECT id FROM public.coach WHERE coach.name = '{coach_name}'),
-    (SELECT id FROM public.team WHERE team.name = '{choosen_team}'),
-    (SELECT name FROM public.team WHERE team.id = (SELECT id FROM public.team WHERE team.name = '{choosen_team}'))
-    );
+    CALL create_coach('{coach_name}', 'Brazil', '{choosen_team}');
     COMMIT
     TRANSACTION;"""
     engine.execute(sql)
@@ -115,44 +101,91 @@ def get_calendar(choosen_team):
     menu.append_item(function_item)
     menu.show()
 
+
 def main_menu(choosen_team, i):
 
-    date = datetime(2022,1,1) + timedelta(i)
+    try:
+        date = datetime(2022,1,1) + timedelta(i)
 
-    team_id = str(pd.read_sql_query(
-    """
-        SELECT 
-            * 
-        FROM 
-            team 
-        WHERE 
-            name = '{}'""".format(choosen_team), con=engine).reset_index(drop=True).id.values[0])
-    
-    df = pd.read_sql_query(
+        team_id = str(pd.read_sql_query(
         """
             SELECT 
-                position, 
-                name, 
-                age, 
-                side, 
-                strength, 
-                energy, 
-                salary, 
-                market_value, 
-                feature1, 
-                feature2, 
-                contract_due_date 
+                * 
             FROM 
-                player 
+                team 
             WHERE 
-                team = '{}'""".format(team_id), con=engine).sort_values(by="position")
+                name = '{}'""".format(choosen_team), con=engine).reset_index(drop=True).id.values[0])
 
-    menu = ConsoleMenu("Brasfoot", "No Brasfoot você comanda um time de futebol, compra e vende jogadores, define o preço dos ingressos, escolhe as táticas e participa dos campeonatos que simulam a realidade. O jogo é super leve, e várias temporadas podem ser jogadas de forma rápida e divertida \n\n\n {}".format(tabulate(df, headers='keys', tablefmt='psql')))
-    function_item = FunctionItem("Calendário", get_calendar, [choosen_team])
-    function_item2 = FunctionItem("Jogar Partida", create_lineups, [choosen_team, team_id, date, i])
-    menu.append_item(function_item)
-    menu.append_item(function_item2)
-    menu.show()
+        df = pd.read_sql_query(
+            """
+                SELECT 
+                    position, 
+                    name, 
+                    age, 
+                    strength, 
+                    energy 
+                FROM 
+                    player 
+                WHERE 
+                    team = '{}'""".format(team_id), con=engine).sort_values(by="position")
+
+        menu = ConsoleMenu("Brasfoot", "No Brasfoot você comanda um time de futebol, compra e vende jogadores, define o preço dos ingressos, escolhe as táticas e participa dos campeonatos que simulam a realidade. O jogo é super leve, e várias temporadas podem ser jogadas de forma rápida e divertida \n\n\n {}".format(tabulate(df, headers='keys', tablefmt='github')))
+        function_item = FunctionItem("Calendário", get_calendar, [choosen_team])
+        function_item2 = FunctionItem("Jogar Partida", create_lineups, [choosen_team, team_id, date, i])
+        function_item3 = FunctionItem("Comprar Jogador", buy_player, [choosen_team])
+        function_item4 = FunctionItem("Vender Jogador", sell_player, [choosen_team])
+        menu.append_item(function_item)
+        menu.append_item(function_item2)
+        menu.append_item(function_item3)
+        menu.append_item(function_item4)
+
+    finally:
+        menu.show()
+
+
+def buy_player(choosen_team):
+    select = f""" SELECT name FROM team"""
+    df = pd.read_sql_query(select, con=engine)
+    print(tabulate(df, headers='keys', tablefmt='psql'))
+    select = int(input('Insira o time do jogador a ser comprado: '))
+    seller_name_team = str(df.iloc[select].values)[2:-2]
+
+    select = f""" SELECT name FROM player WHERE name_team = '{seller_name_team}'"""
+    df = pd.read_sql_query(select, con=engine)
+    print(tabulate(df, headers='keys', tablefmt='psql'))
+    select = int(input(f'Insira o jogador do {seller_name_team} que você deseja comprar: '))
+    name_player = str(df.iloc[select].values)[2:-2]
+    transaction_value = int(input('Insira o valor da transação: '))
+
+
+    sql = f"""BEGIN TRANSACTION;
+    CALL buy_player('{name_player}', '{choosen_team}', '{seller_name_team}', '{transaction_value}');
+    COMMIT
+    TRANSACTION;"""
+    engine.execute(sql)
+
+    input('Transação efetuada com sucesso! \nAperte enter para voltar ao menu principal.')
+
+
+def sell_player(choosen_team):
+    select = f""" SELECT name FROM player WHERE name_team = '{choosen_team}'"""
+    df = pd.read_sql_query(select, con=engine)
+    print(tabulate(df, headers='keys', tablefmt='psql'))
+    name_player = str(input('Insira o nome do jogador que você deseja vender: '))
+
+    select = f""" SELECT name FROM team WHERE name = '{choosen_team}'"""
+    df = pd.read_sql_query(select, con=engine)
+    print(tabulate(df, headers='keys', tablefmt='psql'))
+    buyer_name_team = str(input('Insira o time para vender o jogador: '))
+    transaction_value = int(input('Insira o valor da transação: '))
+
+    sql = f"""BEGIN TRANSACTION;
+    CALL sell_player('{name_player}', '{choosen_team}', '{buyer_name_team}', '{transaction_value}');
+    COMMIT
+    TRANSACTION;"""
+    engine.execute(sql)
+
+    input('Transação efetuada com sucesso! \nAperte enter para voltar ao menu principal.')
 
 
 def create_lineups(choosen_team, team_id, date, i):
@@ -406,7 +439,6 @@ def init():
 
     choosen_team = str(teams.iloc[n].values)[2:-2]
     print('\n Você escolheu o time: ', choosen_team)
-    insert_coach(coach_name)
 
     team_id = str(pd.read_sql_query(
     """
@@ -418,14 +450,15 @@ def init():
             name = '{}'""".format(choosen_team), con=engine).reset_index(drop=True).id.values[0])
 
     return coach_name, choosen_team, team_id
+
 if __name__ == '__main__':
     
     i = 0
 
     coach_name, choosen_team, team_id = init()
-    
-    trains(coach_name, choosen_team)
-    
+
+    create_coach(coach_name, choosen_team)
+
     create_rounds()
 
     main_menu(choosen_team, i)

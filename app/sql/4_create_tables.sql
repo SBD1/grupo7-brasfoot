@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS played_match;
 -- Criação tabela e trigger COACH
 CREATE TABLE coach (
   id uuid DEFAULT gen_random_uuid () PRIMARY KEY,
-  name VARCHAR (100) UNIQUE NOT NULL,
+  name VARCHAR (100) CONSTRAINT constraint_name UNIQUE NOT NULL,
   country nationality_type NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
