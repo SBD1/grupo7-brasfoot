@@ -51,6 +51,7 @@ AS $$
     )
 $$;
 
+
 -- Sell a player
 CREATE OR REPLACE PROCEDURE sell_player(
     name_player VARCHAR(100),
@@ -101,6 +102,7 @@ AS $$
     )
 $$;
 
+
 -- Update player's energy after a played match
 CREATE OR REPLACE PROCEDURE update_players_energy_after_match()
 LANGUAGE SQL
@@ -110,6 +112,7 @@ AS $$
     SET energy = (player.energy - player.age)
     RETURNING *;
 $$;
+
 
 -- Update player's energy before a match
 CREATE OR REPLACE PROCEDURE update_players_energy_before_match()
@@ -122,5 +125,52 @@ AS $$
 $$;
 
 
+-- Init game inserting coach
+CREATE OR REPLACE PROCEDURE insert_coach(
+    name VARCHAR(200),
+    country nationality_type)
+LANGUAGE SQL
+AS $$
+    INSERT INTO coach(name, country) VALUES (name, country);
+$$;
+
+
+-- Update coach's info
+CREATE OR REPLACE PROCEDURE update_coach(
+    name VARCHAR(200),
+    country nationality_type)
+LANGUAGE SQL
+AS $$
+    UPDATE coach
+    SET name = name
+    RETURNING *;
+$$;
+
+
+-- Insert the relation between coach and team (trains)
+CREATE OR REPLACE PROCEDURE insert_trains(
+    coach_name VARCHAR(200),
+    name_team VARCHAR(200))
+LANGUAGE SQL
+AS $$
+    INSERT INTO trains(coach, team, name_team)
+    VALUES(
+    (SELECT id FROM public.coach WHERE coach.name = coach_name),
+	(SELECT id FROM public.team WHERE team.name = name_team),
+    (SELECT name FROM public.team WHERE team.id = (SELECT id FROM public.team WHERE team.name = name_team))
+    );
+$$;
+
+
+-- Function to execute the procedure create coach
+CREATE OR REPLACE PROCEDURE create_coach(
+    name VARCHAR(200),
+    country nationality_type,
+    name_team VARCHAR(200))
+LANGUAGE SQL
+AS $$
+    CALL insert_coach(name, country);
+    CALL insert_trains(name, name_team)
+$$;
 
 COMMIT TRANSACTION;
