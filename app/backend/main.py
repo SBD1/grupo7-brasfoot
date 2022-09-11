@@ -96,18 +96,13 @@ def get_calendar(choosen_team):
     WHERE
         name_team_host = '{}' OR name_team_visitor = '{}'""".format(choosen_team,choosen_team), con=engine)
 
-    menu = ConsoleMenu(tabulate(df, headers='keys', tablefmt='psql'), exit_option_text=False)
+    menu = ConsoleMenu(tabulate(df.iloc[:15], headers='keys', tablefmt='psql'), exit_option_text=False)
     function_item = FunctionItem("Voltar", main_menu, [choosen_team])
     menu.append_item(function_item)
     menu.show()
 
-
-def main_menu(choosen_team, i):
-
-    try:
-        date = datetime(2022,1,1) + timedelta(i)
-
-        team_id = str(pd.read_sql_query(
+def show_team(df):
+    team_id = str(pd.read_sql_query(
         """
             SELECT 
                 * 
@@ -116,35 +111,70 @@ def main_menu(choosen_team, i):
             WHERE 
                 name = '{}'""".format(choosen_team), con=engine).reset_index(drop=True).id.values[0])
 
-        df = pd.read_sql_query(
-            """
-                SELECT 
-                    position, 
-                    name, 
-                    age, 
-                    strength, 
-                    energy 
-                FROM 
-                    player 
-                WHERE 
-                    team = '{}'""".format(team_id), con=engine).sort_values(by="position")
+    df = pd.read_sql_query(
+        """
+            SELECT 
+                position, 
+                name, 
+                age, 
+                strength, 
+                energy 
+            FROM 
+                player 
+            WHERE 
+                team = '{}'""".format(team_id), con=engine).sort_values(by="position")
+    print(tabulate(df, headers='keys', tablefmt='github'))
+    input('\nAperte qualquer tecla para voltar!')
 
-        menu = ConsoleMenu("Brasfoot", "No Brasfoot você comanda um time de futebol, compra e vende jogadores, define o preço dos ingressos, escolhe as táticas e participa dos campeonatos que simulam a realidade. O jogo é super leve, e várias temporadas podem ser jogadas de forma rápida e divertida \n\n\n {}".format(tabulate(df, headers='keys', tablefmt='github')))
-        function_item = FunctionItem("Calendário", get_calendar, [choosen_team])
+
+def main_menu(choosen_team, coach_name, i):
+
+    date = datetime(2022,1,1) + timedelta(i)
+    show_date = f"Hoje é dia {str(date)[:-8]}"
+
+    team_id = str(pd.read_sql_query(
+    """
+        SELECT 
+            * 
+        FROM 
+            team 
+        WHERE 
+            name = '{}'""".format(choosen_team), con=engine).reset_index(drop=True).id.values[0])
+
+    df = pd.read_sql_query(
+        """
+            SELECT 
+                position, 
+                name, 
+                age, 
+                strength, 
+                energy 
+            FROM 
+                player 
+            WHERE 
+                team = '{}'""".format(team_id), con=engine).sort_values(by="position")
+    while(1):
+        menu = ConsoleMenu("Brasfoot", f"Olá {coach_name}!!! \n\n\nNo Brasfoot você comanda um time de futebol, compra e vende jogadores, define o preço dos ingressos, escolhe as táticas e participa dos campeonatos que simulam a realidade. O jogo é super leve, e várias temporadas podem ser jogadas de forma rápida e divertida \n\n\n")
+
+        function_item_coach = CommandItem(show_date, "echo")
+        function_item = FunctionItem("Calendário de Partidas", get_calendar, [choosen_team])
         function_item2 = FunctionItem("Jogar Partida", create_lineups, [choosen_team, team_id, date, i])
         function_item3 = FunctionItem("Comprar Jogador", buy_player, [choosen_team])
         function_item4 = FunctionItem("Vender Jogador", sell_player, [choosen_team])
+        function_item5 = FunctionItem("Ver o time", show_team, [choosen_team])
+
+        menu.append_item(function_item_coach)
+        menu.append_item(function_item5)
         menu.append_item(function_item)
         menu.append_item(function_item2)
         menu.append_item(function_item3)
         menu.append_item(function_item4)
 
-    finally:
         menu.show()
 
 
 def buy_player(choosen_team):
-    select = f""" SELECT name FROM team"""
+    select = f""" SELECT name FROM team WHERE name <> '{choosen_team}'"""
     df = pd.read_sql_query(select, con=engine)
     print(tabulate(df, headers='keys', tablefmt='psql'))
     select = int(input('Insira o time do jogador a ser comprado: '))
@@ -171,12 +201,14 @@ def sell_player(choosen_team):
     select = f""" SELECT name FROM player WHERE name_team = '{choosen_team}'"""
     df = pd.read_sql_query(select, con=engine)
     print(tabulate(df, headers='keys', tablefmt='psql'))
-    name_player = str(input('Insira o nome do jogador que você deseja vender: '))
+    num_name_player = int(input('Insira o nome do jogador que você deseja vender: '))
+    name_player = str(df.iloc[num_name_player].values)[2:-2]
 
-    select = f""" SELECT name FROM team WHERE name = '{choosen_team}'"""
+    select = f""" SELECT name FROM team WHERE name <> '{choosen_team}'"""
     df = pd.read_sql_query(select, con=engine)
     print(tabulate(df, headers='keys', tablefmt='psql'))
-    buyer_name_team = str(input('Insira o time para vender o jogador: '))
+    num_buyer_team = int(input(f'Insira o time para vender o jogador {name_player}: '))
+    buyer_name_team = str(df.iloc[num_buyer_team].values)[2:-2]
     transaction_value = int(input('Insira o valor da transação: '))
 
     sql = f"""BEGIN TRANSACTION;
@@ -461,4 +493,4 @@ if __name__ == '__main__':
 
     create_rounds()
 
-    main_menu(choosen_team, i)
+    main_menu(choosen_team, coach_name, i)
