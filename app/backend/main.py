@@ -283,7 +283,7 @@ def play_round(choosen_team, team_id, i, date):
 
                         ), con=ENGINE)
 
-    print("JOGADORES ESCALADOS")
+    print("\nJOGADORES ESCALADOS")
 
     other_teams = pd.read_sql_query(f""" SELECT team.id, team.name FROM team WHERE name <> '{choosen_team}'""", con=ENGINE)
     
@@ -384,8 +384,12 @@ def play_round(choosen_team, team_id, i, date):
 
         visitor_team_strength = pd.read_sql_query("SELECT * FROM public.player WHERE player.id IN {}".format(players_ids), con=ENGINE)["strength"].mean()
         visitor_team_energy = pd.read_sql_query("SELECT * FROM public.player WHERE player.id IN {}".format(players_ids), con=ENGINE)["energy"].mean()
-        
-        if host_team_strength > visitor_team_strength:
+
+        host_score = host_team_strength * host_team_energy
+        visitor_score = visitor_team_strength * visitor_team_energy
+
+
+        if ((round(host_score) - round(visitor_score)) > 100):
 
             best_player = str(pd.read_sql_query("SELECT * FROM public.player WHERE team = '{}'".format(host), con=ENGINE).sort_values(by="strength").iloc[-1]["id"])
             capacity = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["capacity"])[0]
@@ -438,8 +442,12 @@ def play_round(choosen_team, team_id, i, date):
                                                 best_player,
                                                 pd.read_sql_query("SELECT name FROM public.player WHERE id = '{}'".format(best_player), con=ENGINE)["name"][0]                                      
                                                 ))
+            name_team = str(pd.read_sql_query("SELECT name FROM public.team WHERE id = '{}'".format(host), con=ENGINE)["name"][0])
+            visitor_name = list(pd.read_sql_query(f"""SELECT name FROM team WHERE team.id = '{visitor}'""", con=ENGINE)['name'])[0]
+            name_player = str(pd.read_sql_query("SELECT name FROM public.player WHERE id = '{}'".format(best_player), con=ENGINE)["name"][0])
+            print(f'\nGOOOOOOOLLLL do {name_player}\nO {name_team} ganha a partida contra o {visitor_name}!!!')
 
-        else:
+        elif (round(visitor_score) - (round(host_score)) > 100):
 
             best_player = str(pd.read_sql_query("SELECT * FROM public.player WHERE team = '{}'".format(visitor), con=ENGINE).sort_values(by="strength").iloc[-1]["id"])
             capacity = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["capacity"])[0]
@@ -492,8 +500,42 @@ def play_round(choosen_team, team_id, i, date):
                                                 best_player,
                                                 pd.read_sql_query("SELECT name FROM public.player WHERE id = '{}'".format(best_player), con=ENGINE)["name"][0]                                      
                                                 ))
+            name_team = pd.read_sql_query("SELECT name FROM public.team WHERE id = '{}'".format(visitor), con=ENGINE)["name"][0]
+            host_name = list(pd.read_sql_query(f"""SELECT name FROM team WHERE team.id = '{host}'""", con=ENGINE)['name'])[0]
+            name_player = pd.read_sql_query("SELECT name FROM public.player WHERE id = '{}'".format(best_player), con=ENGINE)["name"][0]
+            print(f'\nGOOOOOOOLLLL do {name_player}\nO {name_team} ganha a partida contra o {host_name}!!!')
 
-    input("RODADA CONCLUÍDA\n\n Aperte enter para finalizar a rodada.")
+        else:
+            capacity = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["capacity"])[0]
+            price = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["ticket_price"])[0]
+            public = randrange(int(capacity/2), capacity)
+            income = public * price
+            public = str(public)
+            income = str(income)
+
+            ENGINE.execute("""INSERT INTO played_match (
+                                                    id_match,
+                                                    id_championship,
+                                                    public,
+                                                    income
+                                                )
+
+                                                VALUES (
+                                                    (SELECT id FROM public.match WHERE (id_team_host = '{}') AND (id_team_visitor = '{}') AND (date = '{}')),
+                                                    (SELECT id FROM public.championship WHERE is_cup = 'False'),
+                                                    {},
+                                                    {}
+                                                );""".format(
+                                                    host,
+                                                    visitor,
+                                                    date,
+                                                    public,
+                                                    income))
+            host_name = list(pd.read_sql_query(f"""SELECT name FROM team WHERE team.id = '{host}'""", con=ENGINE)['name'])[0]
+            visitor_name = list(pd.read_sql_query(f"""SELECT name FROM team WHERE team.id = '{visitor}'""", con=ENGINE)['name'])[0]
+            print(f"\nEmpate entre {host_name} e {visitor_name}")
+
+    input("\nRODADA CONCLUÍDA\n\nAperte enter para finalizar a rodada...")
     
     sql = f"""BEGIN TRANSACTION;
     CALL update_players_energy_after_match('{date}');
