@@ -8,6 +8,7 @@ from consolemenu.items import *
 from consolemenu.format import *
 from consolemenu.menu_component import Dimension
 from tabulate import tabulate
+from random import randrange
 
 ENGINE = create_engine("postgresql://brasfoot:brasfoot@localhost:5432/brasfoot")
 
@@ -379,7 +380,13 @@ def play_round(choosen_team, team_id, i, date):
         if host_team_strength > visitor_team_strength:
 
             best_player = str(pd.read_sql_query("SELECT * FROM public.player WHERE team = '{}'".format(host), con=ENGINE).sort_values(by="strength").iloc[-1]["id"])
-            
+            capacity = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["capacity"])[0]
+            price = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["ticket_price"])[0]
+            public = randrange(capacity/2, capacity)
+            income = public * price
+            public = str(public)
+            income = str(income)
+
             ENGINE.execute("""INSERT INTO played_match (
                                                     id_match,
                                                     id_championship,
@@ -390,12 +397,14 @@ def play_round(choosen_team, team_id, i, date):
                                                 VALUES (
                                                     (SELECT id FROM public.match WHERE (id_team_host = '{}') AND (id_team_visitor = '{}') AND (date = '{}')),
                                                     (SELECT id FROM public.championship WHERE is_cup = 'False'),
-                                                    50000,
-                                                    100000
+                                                    {},
+                                                    {}
                                                 );""".format(
                                                     host, 
                                                     visitor,
-                                                    date))
+                                                    date, 
+                                                    public,
+                                                    income))
 
             ENGINE.execute("""INSERT INTO event (
                                             id_match,
@@ -425,7 +434,13 @@ def play_round(choosen_team, team_id, i, date):
         else:
 
             best_player = str(pd.read_sql_query("SELECT * FROM public.player WHERE team = '{}'".format(visitor), con=ENGINE).sort_values(by="strength").iloc[-1]["id"])
-            
+            capacity = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["capacity"])[0]
+            price = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["ticket_price"])[0]
+            public = randrange(capacity/2, capacity)
+            income = public * price
+            public = str(public)
+            income = str(income)
+
             ENGINE.execute("""INSERT INTO played_match (
                                                     id_match,
                                                     id_championship,
@@ -436,12 +451,14 @@ def play_round(choosen_team, team_id, i, date):
                                                 VALUES (
                                                     (SELECT id FROM public.match WHERE (id_team_host = '{}') AND (id_team_visitor = '{}') AND (date = '{}')),
                                                     (SELECT id FROM public.championship WHERE is_cup = 'False'),
-                                                    50000,
-                                                    100000
+                                                    {},
+                                                    {}
                                                 );""".format(
                                                     host, 
                                                     visitor,
-                                                    date))
+                                                    date,
+                                                    public,
+                                                    income))
 
             ENGINE.execute("""INSERT INTO event (
                                             id_match,
@@ -478,53 +495,67 @@ def play_round(choosen_team, team_id, i, date):
     menu.show()
 
 
-def get_ranking(date):
+def get_ranking(date, i):
 
-    event = pd.read_sql_query("SELECT * FROM public.event", con=ENGINE)
-    match = pd.read_sql_query("SELECT * FROM public.match", con=ENGINE)
-    played_match = pd.read_sql_query("SELECT * FROM public.played_match", con=ENGINE)
-    matches = pd.merge(match, played_match, how="left", left_on="id", right_on="id_match")
-    results = pd.merge(matches, event, how="right", left_on="id_match", right_on="id_match").dropna()
+    if i == 0:
+        ranking = pd.read_sql_query("SELECT name FROM public.team", con=ENGINE)
+        ranking["Pontos"] = [0] * len(ranking)
+        ranking = ranking.rename(columns={"name":"Time"})
+        ranking = ranking.sort_values(by="Pontos", ascending=False).reset_index(drop=True)
+        ranking.index += 1
+        thin = Dimension(width=len(tabulate(ranking, headers='keys', tablefmt='fancy_grid').split("\n")[0])+20, height=len(tabulate(ranking, headers='keys', tablefmt='fancy_grid').split("\n")[0])+20)
+        menu_format = MenuFormatBuilder(max_dimension=thin)
+        menu_format.set_title_align('center')   
+        menu_format.set_prologue_text_align('center')
+        ranking_menu = ConsoleMenu(title="Ranking", subtitle="Data: "+date.strftime("%d/%m/%Y"), prologue_text=tabulate(ranking, headers='keys', tablefmt='fancy_grid'), exit_option_text="Voltar")
+        ranking_menu.formatter = menu_format
+        ranking_menu.show()
+    else:
+        event = pd.read_sql_query("SELECT * FROM public.event", con=ENGINE)
+        match = pd.read_sql_query("SELECT * FROM public.match", con=ENGINE)
+        played_match = pd.read_sql_query("SELECT * FROM public.played_match", con=ENGINE)
+        matches = pd.merge(match, played_match, how="left", left_on="id", right_on="id_match")
+        results = pd.merge(matches, event, how="right", left_on="id_match", right_on="id_match").dropna()
 
-    matches = {}
+        matches = {}
 
-    for i in range(len(results)):
+        for i in range(len(results)):
 
-        if results.iloc[i]["name_team_host"] == results.iloc[i]["name_team"]:
-            matches[i] = {"host":results.iloc[i]["name_team_host"],
+            if results.iloc[i]["name_team_host"] == results.iloc[i]["name_team"]:
+                matches[i] = {"host":results.iloc[i]["name_team_host"],
+                            "visitor":results.iloc[i]["name_team_visitor"],
+                            "winner":results.iloc[i]["name_team"]}
+            else:
+                matches[i] = {"host":results.iloc[i]["name_team_host"],
                         "visitor":results.iloc[i]["name_team_visitor"],
                         "winner":results.iloc[i]["name_team"]}
-        else:
-            matches[i] = {"host":results.iloc[i]["name_team_host"],
-                    "visitor":results.iloc[i]["name_team_visitor"],
-                    "winner":results.iloc[i]["name_team"]}
 
-    winners = pd.DataFrame(matches).T
-    winners = winners.groupby(['winner'])['winner'].count()
-    ranking = pd.read_sql_query("SELECT name FROM public.team", con=ENGINE)
-    points = []
+        winners = pd.DataFrame(matches).T
+        winners = winners.groupby(['winner'])['winner'].count()
+        ranking = pd.read_sql_query("SELECT name FROM public.team", con=ENGINE)
+        points = []
 
-    for name in ranking["name"]:
-        try:
-            points.append(winners[name] * 3)
-        except: 
-            points.append(0)
+        for name in ranking["name"]:
+            try:
+                points.append(winners[name] * 3)
+            except: 
+                points.append(0)
 
-    ranking["Pontos"] = points
-    ranking = ranking.rename(columns={"name":"Time"})
-    ranking = ranking.sort_values(by="Pontos", ascending=False).reset_index(drop=True)
-    ranking.index += 1
+        ranking["Pontos"] = points
+        ranking = ranking.rename(columns={"name":"Time"})
+        ranking = ranking.sort_values(by="Pontos", ascending=False).reset_index(drop=True)
+        ranking.index += 1
 
-    thin = Dimension(width=len(tabulate(ranking, headers='keys', tablefmt='fancy_grid').split("\n")[0])+20, height=len(tabulate(ranking, headers='keys', tablefmt='fancy_grid').split("\n")[0])+20)
+        thin = Dimension(width=len(tabulate(ranking, headers='keys', tablefmt='fancy_grid').split("\n")[0])+20, height=len(tabulate(ranking, headers='keys', tablefmt='fancy_grid').split("\n")[0])+20)
 
-    menu_format = MenuFormatBuilder(max_dimension=thin)
-    menu_format.set_title_align('center')   
-    menu_format.set_prologue_text_align('center')
+        menu_format = MenuFormatBuilder(max_dimension=thin)
+        menu_format.set_title_align('center')   
+        menu_format.set_prologue_text_align('center')
 
-    ranking_menu = ConsoleMenu(title="Ranking", subtitle="Data: "+date.strftime("%d/%m/%Y"), prologue_text=tabulate(ranking, headers='keys', tablefmt='fancy_grid'), exit_option_text="Voltar")
-    ranking_menu.formatter = menu_format
+        ranking_menu = ConsoleMenu(title="Ranking", subtitle="Data: "+date.strftime("%d/%m/%Y"), prologue_text=tabulate(ranking, headers='keys', tablefmt='fancy_grid'), exit_option_text="Voltar")
+        ranking_menu.formatter = menu_format
 
-    ranking_menu.show()
+        ranking_menu.show()
 
 
 def refresh(chosen_team):
@@ -561,7 +592,7 @@ def main_menu(choosen_team, i):
     buy_player_item = FunctionItem("Comprar Jogador", buy_player, [choosen_team, i])
     sell_player_item = FunctionItem("Vender Jogador", sell_player, [choosen_team, i])
     play_match_item = FunctionItem("Jogar Partida", play_round, [choosen_team, team_id, i, date])
-    ranking_item = FunctionItem("Classificação", get_ranking, [date])
+    ranking_item = FunctionItem("Classificação", get_ranking, [date, i])
 
     menu.append_item(calendar_item)
     menu.append_item(buy_player_item)
