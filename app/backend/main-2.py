@@ -164,10 +164,316 @@ def buy_player(choosen_team, i):
     TRANSACTION;"""
     ENGINE.execute(sql)
 
-    input('Transação efetuada com sucesso! \nAperte enter para voltar ao menu principal.')
+    input('Transação efetuada com sucesso!')
     
-    menu = ConsoleMenu()
-    voltar_item = FunctionItem("Menu", main_menu, [choosen_team, i])
+    menu = ConsoleMenu(show_exit_option=False)
+    voltar_item = FunctionItem("Voltar", main_menu, [choosen_team, i])
+    menu.append_item(voltar_item)
+    menu.show()
+
+
+def sell_player(choosen_team, i):
+    select = f""" SELECT name FROM player WHERE name_team = '{choosen_team}'"""
+    df = pd.read_sql_query(select, con=ENGINE)
+    print(tabulate(df, headers='keys', tablefmt='psql'))
+    num_name_player = int(input('Insira o nome do jogador que você deseja vender: '))
+    name_player = str(df.iloc[num_name_player].values)[2:-2]
+
+    select = f""" SELECT name FROM team WHERE name <> '{choosen_team}'"""
+    df = pd.read_sql_query(select, con=ENGINE)
+    print(tabulate(df, headers='keys', tablefmt='psql'))
+    num_buyer_team = int(input(f'Insira o time para vender o jogador {name_player}: '))
+    buyer_name_team = str(df.iloc[num_buyer_team].values)[2:-2]
+    transaction_value = int(input('Insira o valor da transação: '))
+
+    sql = f"""BEGIN TRANSACTION;
+    CALL sell_player('{name_player}', '{choosen_team}', '{buyer_name_team}', '{transaction_value}');
+    COMMIT
+    TRANSACTION;"""
+    ENGINE.execute(sql)
+
+    input('Transação efetuada com sucesso!')
+    
+    menu = ConsoleMenu(show_exit_option=False)
+    voltar_item = FunctionItem("Voltar", main_menu, [choosen_team, i])
+    menu.append_item(voltar_item)
+    menu.show()
+
+
+def play_round(choosen_team, team_id, i, date):
+
+    date = date.strftime("%Y-%m-%d")
+
+    df = pd.read_sql_query(
+            """
+                SELECT 
+                    position, 
+                    name, 
+                    age, 
+                    strength, 
+                    energy,
+                    feature1,
+                    feature2,
+                    salary,
+                    market_value,
+                    contract_due_date
+                FROM 
+                    player 
+                WHERE 
+                    team = '{}'""".format(team_id), con=ENGINE).sort_values(by="position", key=lambda x: x.map({"G":0, "L":1, "Z":2, "M":3, "A":4})).reset_index(drop=True)
+
+    df["salary"] = df["salary"].apply(lambda x: '${:,.2f}'.format((x/1000)))
+    df["market_value"] = df["market_value"].apply(lambda x: '${:,.2f}'.format((x/1000)))
+    df = df.rename(columns={"name":"jogador"})
+
+    print(tabulate(df, headers='keys', tablefmt='fancy_grid'))
+
+    n_players = list(map(int, input("Selecione os jogadores para a partida: ").split()))
+    
+    lineup_players = df.iloc[n_players].reset_index(drop=True)
+
+    for j in range(len(lineup_players)):
+
+        player = lineup_players.iloc[j]
+
+        ENGINE.execute("""
+                    INSERT INTO lineup_match (
+                        id_match,
+                        id_team,
+                        name_team,
+                        id_player,
+                        name_player,
+                        is_starter,
+                        is_modified
+                        )
+
+                    VALUES (
+                            
+                        (SELECT match.id FROM match WHERE (match.date = '{}') AND (match.id_team_host = '{}'  OR match.id_team_visitor = '{}')),
+                        
+                        '{}',
+                        
+                        '{}',
+
+                        (SELECT player.id FROM player WHERE (player.name = '{}') AND (player.name_team = '{}')),
+                        
+                        '{}',
+                        
+                        True,
+                        
+                        False);""".format(
+                            date,
+                            team_id,
+                            team_id,
+                            team_id,
+                            choosen_team,
+                            player.jogador,
+                            choosen_team,
+                            player.jogador,
+
+
+                        ), con=ENGINE)
+
+    print("JOGADORES ESCALADOS")
+
+    other_teams = pd.read_sql_query(f""" SELECT team.id, team.name FROM team WHERE name <> '{choosen_team}'""", con=ENGINE)
+    
+    for id, name in zip(other_teams["id"], other_teams["name"]):
+    
+        df = pd.read_sql_query(
+                """
+                    SELECT 
+                        position, 
+                        name, 
+                        age, 
+                        strength, 
+                        energy,
+                        feature1,
+                        feature2,
+                        salary,
+                        market_value,
+                        contract_due_date
+                    FROM 
+                        player 
+                    WHERE 
+                        team = '{}'""".format(id), con=ENGINE).sort_values(by="position", key=lambda x: x.map({"G":0, "L":1, "Z":2, "M":3, "A":4})).reset_index(drop=True)
+
+        list_players = [df[df["position"] == "G"].iloc[0].name] + list(df[df["position"] == "L"].iloc[0:2].index) + list(df[df["position"] == "Z"].iloc[0:2].index) + list(df[df["position"] == "M"].iloc[0:4].index) + list(df[df["position"] == "A"].iloc[0:2].index)
+
+        lineup_players = df.iloc[list_players].reset_index(drop=True)
+        lineup_players = lineup_players.rename(columns={"name":"jogador"})
+
+        for j in range(len(lineup_players)):
+
+            player = lineup_players.iloc[j]
+
+            ENGINE.execute("""
+                        INSERT INTO lineup_match (
+                            id_match,
+                            id_team,
+                            name_team,
+                            id_player,
+                            name_player,
+                            is_starter,
+                            is_modified
+                            )
+
+                        VALUES (
+                                
+                            (SELECT match.id FROM match WHERE (match.date = '{}') AND (match.id_team_host = '{}'  OR match.id_team_visitor = '{}')),
+                            
+                            '{}',
+                            
+                            '{}',
+
+                            (SELECT player.id FROM player WHERE (player.name = '{}') AND (player.name_team = '{}')),
+                            
+                            '{}',
+                            
+                            True,
+                            
+                            False);""".format(
+                                date,
+                                id,
+                                id,
+                                id,
+                                name,
+                                player.jogador,
+                                name,
+                                player.jogador,
+
+
+                            ), con=ENGINE)
+
+    print("GERANDO RESULTADOS")
+
+    for j in range(len(pd.read_sql_query("SELECT * FROM public.match WHERE date = '{}'".format(date), con=ENGINE))):
+
+        host = str(pd.read_sql_query("SELECT * FROM public.match WHERE date = '{}'".format(date), con=ENGINE).iloc[j].id_team_host)
+        visitor = str(pd.read_sql_query("SELECT * FROM public.match WHERE date = '{}'".format(date), con=ENGINE).iloc[j].id_team_visitor)
+
+        players_ids = "("
+
+        for j in range(len(pd.read_sql_query("SELECT id_player FROM public.lineup_match WHERE (id_team = '{}')".format(host), con=ENGINE)["id_player"])):
+
+            if j == (len(pd.read_sql_query("SELECT id_player FROM public.lineup_match WHERE (id_team = '{}')".format(host), con=ENGINE)["id_player"]) - 1):
+                players_ids += "'{}')".format(str(pd.read_sql_query("SELECT id_player FROM public.lineup_match WHERE (id_team = '{}')".format(host), con=ENGINE)["id_player"][j]))
+            else:
+                players_ids += "'{}',".format(str(pd.read_sql_query("SELECT id_player FROM public.lineup_match WHERE (id_team = '{}')".format(host), con=ENGINE)["id_player"][j]))
+
+        host_team_strength = pd.read_sql_query("SELECT * FROM public.player WHERE player.id IN {}".format(players_ids), con=ENGINE)["strength"].mean()
+        host_team_energy = pd.read_sql_query("SELECT * FROM public.player WHERE player.id IN {}".format(players_ids), con=ENGINE)["energy"].mean()
+
+        players_ids = "("
+
+        for j in range(len(pd.read_sql_query("SELECT id_player FROM public.lineup_match WHERE (id_team = '{}')".format(visitor), con=ENGINE)["id_player"])):
+
+            if j == (len(pd.read_sql_query("SELECT id_player FROM public.lineup_match WHERE (id_team = '{}')".format(visitor), con=ENGINE)["id_player"]) - 1):
+                players_ids += "'{}')".format(str(pd.read_sql_query("SELECT id_player FROM public.lineup_match WHERE (id_team = '{}')".format(visitor), con=ENGINE)["id_player"][j]))
+            else:
+                players_ids += "'{}',".format(str(pd.read_sql_query("SELECT id_player FROM public.lineup_match WHERE (id_team = '{}')".format(visitor), con=ENGINE)["id_player"][j]))
+
+        visitor_team_strength = pd.read_sql_query("SELECT * FROM public.player WHERE player.id IN {}".format(players_ids), con=ENGINE)["strength"].mean()
+        visitor_team_energy = pd.read_sql_query("SELECT * FROM public.player WHERE player.id IN {}".format(players_ids), con=ENGINE)["energy"].mean()
+        
+        if host_team_strength > visitor_team_strength:
+
+            best_player = str(pd.read_sql_query("SELECT * FROM public.player WHERE team = '{}'".format(host), con=ENGINE).sort_values(by="strength").iloc[-1]["id"])
+            
+            ENGINE.execute("""INSERT INTO played_match (
+                                                    id_match,
+                                                    id_championship,
+                                                    public,
+                                                    income
+                                                )
+
+                                                VALUES (
+                                                    (SELECT id FROM public.match WHERE (id_team_host = '{}') AND (id_team_visitor = '{}') AND (date = '{}')),
+                                                    (SELECT id FROM public.championship WHERE is_cup = 'False'),
+                                                    50000,
+                                                    100000
+                                                );""".format(
+                                                    host, 
+                                                    visitor,
+                                                    date))
+
+            ENGINE.execute("""INSERT INTO event (
+                                            id_match,
+                                            id_team,
+                                            name_team,
+                                            id_player,
+                                            name_player,
+                                            event_type
+                                        )
+
+                                        VALUES (
+                                            (SELECT id FROM public.match WHERE (id_team_host = '{}') AND (id_team_visitor = '{}') AND (date = '{}')),
+                                            '{}',
+                                            '{}',
+                                            '{}',
+                                            '{}',
+                                            'goal');""".format(
+                                                host,
+                                                visitor,
+                                                date,
+                                                host,
+                                                pd.read_sql_query("SELECT name FROM public.team WHERE id = '{}'".format(host), con=ENGINE)["name"][0],
+                                                best_player,
+                                                pd.read_sql_query("SELECT name FROM public.player WHERE id = '{}'".format(best_player), con=ENGINE)["name"][0]                                      
+                                                ))
+
+        else:
+
+            best_player = str(pd.read_sql_query("SELECT * FROM public.player WHERE team = '{}'".format(visitor), con=ENGINE).sort_values(by="strength").iloc[-1]["id"])
+            
+            ENGINE.execute("""INSERT INTO played_match (
+                                                    id_match,
+                                                    id_championship,
+                                                    public,
+                                                    income
+                                                )
+
+                                                VALUES (
+                                                    (SELECT id FROM public.match WHERE (id_team_host = '{}') AND (id_team_visitor = '{}') AND (date = '{}')),
+                                                    (SELECT id FROM public.championship WHERE is_cup = 'False'),
+                                                    50000,
+                                                    100000
+                                                );""".format(
+                                                    host, 
+                                                    visitor,
+                                                    date))
+
+            ENGINE.execute("""INSERT INTO event (
+                                            id_match,
+                                            id_team,
+                                            name_team,
+                                            id_player,
+                                            name_player,
+                                            event_type
+                                        )
+
+                                        VALUES (
+                                            (SELECT id FROM public.match WHERE (id_team_host = '{}') AND (id_team_visitor = '{}') AND (date = '{}')),
+                                            '{}',
+                                            '{}',
+                                            '{}',
+                                            '{}',
+                                            'goal');""".format(
+                                                host,
+                                                visitor,
+                                                date,
+                                                visitor,
+                                                pd.read_sql_query("SELECT name FROM public.team WHERE id = '{}'".format(visitor), con=ENGINE)["name"][0],
+                                                best_player,
+                                                pd.read_sql_query("SELECT name FROM public.player WHERE id = '{}'".format(best_player), con=ENGINE)["name"][0]                                      
+                                                ))
+
+    input("RODADA CONCLUÍDA")
+
+    i = i+7
+
+    menu = ConsoleMenu(show_exit_option=False)
+    voltar_item = FunctionItem("Voltar", main_menu, [choosen_team, i])
     menu.append_item(voltar_item)
     menu.show()
 
@@ -204,8 +510,13 @@ def main_menu(choosen_team, i):
 
     calendar_item = FunctionItem("Calendário", get_calendar, [choosen_team, date])
     buy_player_item = FunctionItem("Comprar Jogador", buy_player, [choosen_team, i])
+    sell_player_item = FunctionItem("Vender Jogador", sell_player, [choosen_team, i])
+    play_match_item = FunctionItem("Jogar Partida", play_round, [choosen_team, team_id, i, date])
+
     menu.append_item(calendar_item)
     menu.append_item(buy_player_item)
+    menu.append_item(sell_player_item)
+    menu.append_item(play_match_item)
 
 
     menu.show()
@@ -215,6 +526,9 @@ def init():
 
     ENGINE.execute("DELETE FROM coach")
     ENGINE.execute("DELETE FROM match")
+    ENGINE.execute("DELETE FROM lineup_match")
+    ENGINE.execute("DELETE FROM played_match")
+    ENGINE.execute("DELETE FROM event")
 
     print('Olá, seja bem-vind@ ao jogo Brasfoot!')
     coach_name = input('Escolha o seu nickname de treinador(a): ')
