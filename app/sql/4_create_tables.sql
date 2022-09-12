@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS played_match;
 -- Criação tabela e trigger COACH
 CREATE TABLE coach (
   id uuid DEFAULT gen_random_uuid () PRIMARY KEY,
-  name VARCHAR (100) UNIQUE NOT NULL,
+  name VARCHAR (100) CONSTRAINT constraint_name UNIQUE NOT NULL,
   country nationality_type NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -85,11 +85,12 @@ CREATE TABLE player (
   name VARCHAR (100) UNIQUE NOT NULL,
   team uuid NOT NULL, CONSTRAINT team_fk FOREIGN KEY (team) REFERENCES team(id) ON DELETE CASCADE,
   name_team VARCHAR (100) NOT NULL, CONSTRAINT name_team_fk FOREIGN KEY (name_team) REFERENCES team(name) ON DELETE CASCADE,
+  is_starter BOOLEAN NOT NULL DEFAULT FALSE,
   age INTEGER NOT NULL, CHECK (age BETWEEN 16 AND 48),
   position player_position_type NOT NULL,
   side player_side_type NOT NULL,
   strength INTEGER NOT NULL, CHECK (strength BETWEEN 0 AND 100),
-  energy INTEGER NOT NULL, CHECK (energy BETWEEN 0 AND 100),
+  energy INTEGER CONSTRAINT energy_constraint NOT NULL, CHECK (energy BETWEEN 0 AND 100),
   salary NUMERIC NOT NULL, CHECK (salary > 0),
   contract_due_date DATE NOT NULL,
   market_value NUMERIC NOT NULL, CHECK (market_value > 0),
@@ -152,6 +153,10 @@ BEFORE UPDATE ON played_match
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
+CREATE TRIGGER trigger_insert_on_played_match
+AFTER INSERT ON played_match
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_insert_on_played_match();
 
 -- Criação tabela e trigger LINEUP_MATCH
 CREATE TABLE lineup_match (

@@ -85,6 +85,12 @@ source venv/bin/activate
 Navegue até o diretório
 **grupo7-brasfoot/app/backend** e execute o seguinte comando:
 
+```shell
+pip install -r requirements.txt
+```
+
+Em seguida, execute o seguinte comando:
+
 ```python
 python3 main.py
 ```

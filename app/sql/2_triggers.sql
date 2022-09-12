@@ -9,4 +9,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Trigger for update finance on new played match
+CREATE OR REPLACE FUNCTION trigger_insert_on_played_match()
+RETURNS trigger AS $$
+BEGIN
+  
+  UPDATE finance
+  SET patrimony = patrimony + NEW.income
+  WHERE finance.id_team = (SELECT id_team_host FROM match WHERE match.id = NEW.id_match);
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
 COMMIT TRANSACTION;

@@ -5,10 +5,7 @@ INSERT INTO championship (
 )
 
 VALUES (
-    True
-),
-(
     False
 );
-
+  
 COMMIT TRANSACTION;
