@@ -131,7 +131,9 @@ CREATE OR REPLACE PROCEDURE insert_coach(
     country nationality_type)
 LANGUAGE SQL
 AS $$
-    INSERT INTO coach(name, country) VALUES (name, country);
+    INSERT INTO coach(name, country) VALUES (name, country)
+    ON CONFLICT ON CONSTRAINT constraint_name
+    DO NOTHING;
 $$;
 
 
