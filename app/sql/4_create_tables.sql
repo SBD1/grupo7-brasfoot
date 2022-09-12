@@ -153,6 +153,10 @@ BEFORE UPDATE ON played_match
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
+CREATE TRIGGER trigger_insert_on_played_match
+AFTER INSERT ON played_match
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_insert_on_played_match();
 
 -- Criação tabela e trigger LINEUP_MATCH
 CREATE TABLE lineup_match (
