@@ -382,7 +382,7 @@ def play_round(choosen_team, team_id, i, date):
             best_player = str(pd.read_sql_query("SELECT * FROM public.player WHERE team = '{}'".format(host), con=ENGINE).sort_values(by="strength").iloc[-1]["id"])
             capacity = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["capacity"])[0]
             price = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["ticket_price"])[0]
-            public = randrange(capacity/2, capacity)
+            public = randrange(int(capacity/2), capacity)
             income = public * price
             public = str(public)
             income = str(income)
@@ -436,7 +436,7 @@ def play_round(choosen_team, team_id, i, date):
             best_player = str(pd.read_sql_query("SELECT * FROM public.player WHERE team = '{}'".format(visitor), con=ENGINE).sort_values(by="strength").iloc[-1]["id"])
             capacity = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["capacity"])[0]
             price = list(pd.read_sql_query("SELECT * FROM stadium WHERE team = '{}'".format(host), con=ENGINE)["ticket_price"])[0]
-            public = randrange(capacity/2, capacity)
+            public = randrange(int(capacity/2), capacity)
             income = public * price
             public = str(public)
             income = str(income)
@@ -486,6 +486,13 @@ def play_round(choosen_team, team_id, i, date):
                                                 ))
 
     input("RODADA CONCLUÍDA")
+    
+    sql = f"""BEGIN TRANSACTION;
+    CALL update_players_energy_after_match('{date}');
+    COMMIT
+    TRANSACTION;
+    """
+    ENGINE.execute(sql)
 
     i = i+7
 

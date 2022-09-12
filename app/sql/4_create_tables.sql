@@ -90,7 +90,7 @@ CREATE TABLE player (
   position player_position_type NOT NULL,
   side player_side_type NOT NULL,
   strength INTEGER NOT NULL, CHECK (strength BETWEEN 0 AND 100),
-  energy INTEGER NOT NULL, CHECK (energy BETWEEN 0 AND 100),
+  energy INTEGER CONSTRAINT energy_constraint NOT NULL, CHECK (energy BETWEEN 0 AND 100),
   salary NUMERIC NOT NULL, CHECK (salary > 0),
   contract_due_date DATE NOT NULL,
   market_value NUMERIC NOT NULL, CHECK (market_value > 0),

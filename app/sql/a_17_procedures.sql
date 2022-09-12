@@ -104,23 +104,27 @@ $$;
 
 
 -- Update player's energy after a played match
-CREATE OR REPLACE PROCEDURE update_players_energy_after_match()
+CREATE OR REPLACE PROCEDURE update_players_energy_after_match(match_date timestamptz)
 LANGUAGE SQL
 AS $$
     -- Discount player's energy
     UPDATE player
     SET energy = (player.energy - player.age)
+    WHERE player.id IN (SELECT DISTINCT id_player
+                        FROM lineup_match, match
+                        WHERE match.id IN (SELECT id FROM match WHERE date = match_date))
     RETURNING *;
 $$;
 
 
 -- Update player's energy before a match
-CREATE OR REPLACE PROCEDURE update_players_energy_before_match()
+CREATE OR REPLACE PROCEDURE update_players_energy_before_match(match_date timestamptz)
 LANGUAGE SQL
 AS $$
     -- Increase player's energy before a match
     UPDATE player
     SET energy = (energy + (select avg(age) from player))
+    WHERE player.id IN (SELECT DISTINCT id_player FROM lineup_match, match WHERE match.id IN (SELECT id FROM match WHERE date = match_date))
     RETURNING *;
 $$;
 
