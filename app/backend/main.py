@@ -205,6 +205,14 @@ def play_round(choosen_team, team_id, i, date):
 
     date = date.strftime("%Y-%m-%d")
 
+    if date != '2022-01-01':
+        sql = f"""BEGIN TRANSACTION;
+        CALL update_players_energy_before_match('{date}');
+        COMMIT
+        TRANSACTION;
+        """
+        ENGINE.execute(sql)
+
     df = pd.read_sql_query(
             """
                 SELECT 
@@ -485,7 +493,7 @@ def play_round(choosen_team, team_id, i, date):
                                                 pd.read_sql_query("SELECT name FROM public.player WHERE id = '{}'".format(best_player), con=ENGINE)["name"][0]                                      
                                                 ))
 
-    input("RODADA CONCLUÍDA")
+    input("RODADA CONCLUÍDA\n\n Aperte enter para finalizar a rodada.")
     
     sql = f"""BEGIN TRANSACTION;
     CALL update_players_energy_after_match('{date}');

@@ -124,10 +124,14 @@ AS $$
     -- Increase player's energy before a match
     UPDATE player
     SET energy = (energy + (select avg(age) from player))
-    WHERE player.id IN (SELECT DISTINCT id_player FROM lineup_match, match WHERE match.id IN (SELECT id FROM match WHERE date = match_date))
+    WHERE player.id IN (SELECT DISTINCT lineup_match.id_player
+                        FROM lineup_match, match, player
+                        WHERE (player.energy - 100 + (select avg(age) from player) < 0) = True
+                        AND player.id = lineup_match.id_player
+                        AND (match.date = match_date)
+                        AND (match.id IN (SELECT id FROM match WHERE date = match_date)))
     RETURNING *;
 $$;
-
 
 -- Init game inserting coach
 CREATE OR REPLACE PROCEDURE insert_coach(
